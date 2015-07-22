@@ -1,9 +1,10 @@
 /.bundle/
-/.yardoc
 /Gemfile.lock
-/_yardoc/
 /coverage/
 /doc/
 /pkg/
 /spec/reports/
 /tmp/
+
+# config file used in tests with a live Ebay sandbox
+ebay.conf.yml
