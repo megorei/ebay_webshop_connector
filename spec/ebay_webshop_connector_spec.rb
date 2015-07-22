@@ -13,7 +13,8 @@ describe EbayWebshopConnector do
       auth_token: "myverylongebayauthtoken",
       app_id: "my-ebay-app-id",
       cert_id: "my-ebay-cert-id",
-      ru_name: "my-ebay-ru-name")
+      ru_name: "my-ebay-ru-name",
+      compatability_level: 931)
 
     File.write ebay_dummy_conf_file, config
   end
