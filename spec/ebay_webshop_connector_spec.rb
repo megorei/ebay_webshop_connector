@@ -13,9 +13,7 @@ describe EbayWebshopConnector do
       auth_token: "myverylongebayauthtoken",
       app_id: "my-ebay-app-id",
       cert_id: "my-ebay-cert-id",
-      ru_name: "my-ebay-ru-name",
-      compatability_level: 931,
-      site_id: 77 # Ebay Germany
+      ru_name: "my-ebay-ru-name"
     )
 
     File.write ebay_dummy_conf_file, config
@@ -68,7 +66,7 @@ describe EbayWebshopConnector do
         let(:config_file) { ebay_live_conf_file }
 
         it 'is successful' do
-          categories = subject.get_suggested_categories 'test'
+          categories = subject.get_suggested_categories(query: 'test')
           expect(categories[:ack]).to eq 'Success'
         end
       end
@@ -79,7 +77,7 @@ describe EbayWebshopConnector do
         # in German language
         it 'returns the error message in German' do
           expect {
-            subject.get_suggested_categories 'query'
+            subject.get_suggested_categories query: 'query'
           }.to raise_error /nicht erfolgreich/
         end
       end
