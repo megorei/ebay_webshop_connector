@@ -17,7 +17,7 @@ class EbayWebshopConnector
   }
 
   def initialize(config_file)
-    read_in(config_file).each do |key, value|
+    from_yaml(config_file).each do |key, value|
       Ebayr.send "#{key}=", value
     end
   end
@@ -53,7 +53,7 @@ class EbayWebshopConnector
     ebay_str.to_s.camelize.gsub /Ebay/, 'eBay'
   end
 
-  def read_in(file)
+  def from_yaml(file)
     Psych.load_file file
   end
 
