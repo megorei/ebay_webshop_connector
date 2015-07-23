@@ -6,6 +6,8 @@ require 'time'
 
 class EbayWebshopConnector
 
+  WARNING_LEVEL = 'High'
+
   def initialize(config_file)
     read_in(config_file).each do |key, value|
       Ebayr.send "#{key}=", value
@@ -15,16 +17,27 @@ class EbayWebshopConnector
   def get_ebay_official_time
     result = Ebayr.call :GeteBayOfficialTime
 
-    if result[:ack] == 'Success'
-      return Time.parse result[:timestamp]
-    end
+    handle_error result
 
-    if result[:errors]
-      raise EbayWebshopConnector::RetrievalError.new result[:errors]
-    end
+    Time.parse result[:timestamp]
+  end
+
+  def get_suggested_categories(query)
+    result = Ebayr.call :GetSuggestedCategories,
+      query: query,
+      warningLevel: WARNING_LEVEL
+
+    handle_error result
+
+    result
   end
 
   private
+
+  def handle_error(result)
+    result[:errors] and
+      raise EbayWebshopConnector::RetrievalError.new result[:errors]
+  end
 
   def read_in(file)
     Psych.load_file file

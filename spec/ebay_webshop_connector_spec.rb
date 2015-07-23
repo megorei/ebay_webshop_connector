@@ -14,7 +14,9 @@ describe EbayWebshopConnector do
       app_id: "my-ebay-app-id",
       cert_id: "my-ebay-cert-id",
       ru_name: "my-ebay-ru-name",
-      compatability_level: 931)
+      compatability_level: 931,
+      site_id: 77 # Ebay Germany
+    )
 
     File.write ebay_dummy_conf_file, config
   end
@@ -59,7 +61,28 @@ describe EbayWebshopConnector do
           expect{ subject.get_ebay_official_time }.to raise_error EbayWebshopConnector::RetrievalError
         end
       end
+    end
 
+    describe '#get_suggested_categories' do
+      context 'with correct live Ebay sandbox authorisation' do
+        let(:config_file) { ebay_live_conf_file }
+
+        it 'is successful' do
+          categories = subject.get_suggested_categories 'test'
+          expect(categories[:ack]).to eq 'Success'
+        end
+      end
+
+      context 'with incorrect live Ebay sandbox authorisation' do
+        # This test will only run green if the site_id specified
+        # in your config is 77 (Germany) or another eBay platform
+        # in German language
+        it 'returns the error message in German' do
+          expect {
+            subject.get_suggested_categories 'query'
+          }.to raise_error /nicht erfolgreich/
+        end
+      end
     end
   end
 end
