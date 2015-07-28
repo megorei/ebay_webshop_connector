@@ -70,17 +70,6 @@ describe EbayWebshopConnector do
           expect(categories[:ack]).to eq 'Success'
         end
       end
-
-      context 'with incorrect live Ebay sandbox authorisation' do
-        # This test will only run green if the site_id specified
-        # in your config is 77 (Germany) or another eBay platform
-        # in German language
-        it 'returns the error message in German' do
-          expect {
-            subject.get_suggested_categories query: 'query'
-          }.to raise_error /nicht erfolgreich/
-        end
-      end
     end
   end
 end
