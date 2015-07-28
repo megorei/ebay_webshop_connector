@@ -4,6 +4,7 @@ require 'psych'
 # extend Time with parsing methods
 require 'time'
 require 'active_support/core_ext/string/inflections'
+require 'json'
 
 class EbayWebshopConnector
 
@@ -53,9 +54,9 @@ class EbayWebshopConnector
     # http://developer.ebay.com/devzone/client-alerts/docs/CallRef/types/SeverityCodeType.html
     only_warnings = errors.all?{ |error_hash| error_hash[:severity_code] == 'Warning' }
     if only_warnings
-      Kernel.warn errors.to_s
+      Kernel.warn JSON.pretty_generate errors
     else
-      raise EbayWebshopConnector::RetrievalError.new errors
+      raise EbayWebshopConnector::RetrievalError.new JSON.pretty_generate errors
     end
   end
 
