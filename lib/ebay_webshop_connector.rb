@@ -45,8 +45,18 @@ class EbayWebshopConnector
 
 
   def handle_error(result)
-    result[:errors] and
-      raise EbayWebshopConnector::RetrievalError.new result[:errors]
+    return unless result[:errors]
+
+    errors = result[:errors]
+    errors = [errors] unless errors.is_a?(Array)
+
+    # http://developer.ebay.com/devzone/client-alerts/docs/CallRef/types/SeverityCodeType.html
+    only_warnings = errors.all?{ |error_hash| error_hash[:severity_code] == 'Warning' }
+    if only_warnings
+      Kernel.warn errors.to_s
+    else
+      raise EbayWebshopConnector::RetrievalError.new errors
+    end
   end
 
   def customCamelize(ebay_str)
